@@ -1,14 +1,15 @@
-use crate::Row;
 use crate::Document;
+use crate::Row;
 use crate::Terminal;
 
-use termion::event::Key;
 use termion::color;
+use termion::event::Key;
 
 use std::env;
 use std::time::Duration;
 use std::time::Instant;
 
+const STATUS_FG_COLOR: color::Rgb = color::Rgb(63, 63, 63);
 const STATUS_BG_COLOR: color::Rgb = color::Rgb(239, 239, 239);
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 
@@ -43,7 +44,6 @@ pub struct Editor {
 
 impl Editor {
     pub fn run(&mut self) {
-
         loop {
             if let Err(error) = self.refresh_screen() {
                 die(error);
@@ -67,7 +67,7 @@ impl Editor {
                 doc.unwrap()
             } else {
                 initial_status = format!("Err: Nao foi possivel abrir: {}", file_name);
-                Document::default)()
+                Document::default()
             }
         } else {
             Document::default()
@@ -94,8 +94,8 @@ impl Editor {
             self.draw_status_bar();
             self.draw_message_bar();
             Terminal::cursor_position(&Position {
-                x:self.cursor_position.x.saturating_sub(self.offset.x),
-                y:self.cursor_position.y.saturating_sub(self,offset.y),
+                x: self.cursor_position.x.saturating_sub(self.offset.x),
+                y: self.cursor_position.y.saturating_sub(self.offset.y),
             });
         }
         Terminal::cursor_show();
@@ -244,7 +244,6 @@ impl Editor {
 
     // desenha a status bar na tela
     fn draw_status_bar(&self) {
-        // let spaces = " ".repeat(self.terminal.size().width as usize);
         let mut status;
         let width = self.terminal.size().width as usize;
         let mut file_name = "[Sem titulo]".to_string();
@@ -252,13 +251,13 @@ impl Editor {
             file_name = name.clone();
             file_name.truncate(20);
         }
-        status = format!()"{} - {} linhas", file_name, self.document.len();
+        status = format!("{} - {} linhas", file_name, self.document.len());
         let line_indicator = format!(
             "{}/{}",
-            self.cursor_position.y.saturing_add(1),
+            self.cursor_position.y.saturating_add(1),
             self.document.len()
         );
-        let len = status.len() + line_indicator;
+        let len = status.len() + line_indicator.len();
         if width > len {
             status.push_str(&" ".repeat(width - len));
         }
@@ -267,7 +266,7 @@ impl Editor {
 
         Terminal::set_bg_color(STATUS_BG_COLOR);
         Terminal::set_fg_color(STATUS_FG_COLOR);
-        println!("{}\r", spaces);
+        println!("{}\r", status);
         Terminal::reset_bg_color();
         Terminal::reset_fg_color();
     }

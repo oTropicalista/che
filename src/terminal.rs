@@ -22,7 +22,6 @@ impl Terminal {
         Ok(Self {
             size: Size {
                 width: size.0,
-                height: size.1,
                 height: size.1.saturating_sub(2), //para status bar
             },
             _stdout: stdout().into_raw_mode()?,
@@ -73,7 +72,7 @@ impl Terminal {
         print!("{}", termion::clear::CurrentLine);
     }
 
-    pub fn set_bg_color(coloor: color::Rgb) {
+    pub fn set_bg_color(color: color::Rgb) {
         print!("{}", color::Bg(color));
     }
 
